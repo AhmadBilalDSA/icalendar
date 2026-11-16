@@ -59,7 +59,7 @@ exclude_patterns = [
     "reference/api/modules.rst",
 ]
 html_context = {
-    "github_user": "collective",
+    "github_user": "PyCalendar",
     "github_repo": "icalendar",
     "github_version": "main",
     "doc_path": "docs",
@@ -74,7 +74,7 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "GitHub",
-            "url": "https://github.com/collective/icalendar",
+            "url": "https://github.com/PyCalendar/icalendar",
             "icon": "fa-brands fa-square-github",
             "type": "fontawesome",
             "attributes": {"target": "_blank", "rel": "noopener me"},
@@ -116,17 +116,16 @@ linkcheck_ignore = [
     # Ignore pages that require authentication
     r"https://app.readthedocs.org/dashboard/icalendar/users/create/",
     r"https://docutils.sourceforge.io/rst.html",
-    r"https://github.com/collective/icalendar/fork",
-    r"https://github.com/collective/icalendar/issues/new",
-    r"https://github.com/collective/icalendar/settings/",
+    r"https://github.com/PyCalendar/icalendar/fork",
+    r"https://github.com/PyCalendar/icalendar/issues/new",
+    r"https://github.com/PyCalendar/icalendar/settings/",
     r"https://groups.google.com/g/icalendar-coc/",
     r"https://pypi.org/manage/project/icalendar/collaboration/",
     # Ignore specific anchors
     r"https://github.com/actions/python-versions#support-policy",
-    r"https://github.com/collective/icalendar/blob/7ca9db18c0847d1530520e01baf75f8ab8f4fa06/pyproject.toml#L32",
-    r"https://github.com/collective/icalendar/blob/main/CODE_OF_CONDUCT.md#enforcement",
-    r"https://github.com/collective/icalendar/blob/main/README.rst#related-projects",
-    r"https://github.com/pre-commit/pre-commit-hooks#debug-statements",
+    r"https://github.com/PyCalendar/icalendar/blob/7ca9db18c0847d1530520e01baf75f8ab8f4fa06/pyproject.toml#L32",
+    r"https://github.com/PyCalendar/icalendar/blob/main/CODE_OF_CONDUCT.md#enforcement",
+    r"https://github.com/PyCalendar/icalendar/blob/main/README.rst#related-projects",
     r"https://up-for-grabs.net/#/filters",
     # Ignore links that are unstable
     r"https://www.unicode.org/cldr/cldr-aux/charts/29/supplemental/zone_tzid.html",
@@ -222,8 +221,7 @@ copybutton_exclude = ".linenos, .gp, .go"
 
 
 # -- sphinx_issues configuration ----------------------------------
-# enables :issue:`N`, :pr:`N`, :user:`name` roles
-issues_github_path = "collective/icalendar"
+issues_github_path = "PyCalendar/icalendar"
 
 # -- sphinx_llms_txt builder configuration ----------------------------------
 llms_txt_exclude = [
@@ -242,9 +240,9 @@ redirects = {
     "credits": "contribute/credits.html",
     "contributing": "contribute/index.html",
     "install": "how-to/install.html",
-    "license": "https://github.com/collective/icalendar/blob/main/LICENSE.rst",
+    "license": "https://github.com/PyCalendar/icalendar/blob/main/LICENSE.rst",
     "maintenance": "contribute/maintenance.html",
-    "security": "https://github.com/collective/icalendar/blob/main/SECURITY.md",
+    "security": "https://github.com/PyCalendar/icalendar/blob/main/SECURITY.md",
     "usage": "how-to/usage.html",
 }
 
