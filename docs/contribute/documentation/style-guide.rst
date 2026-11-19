@@ -438,11 +438,9 @@ When making a contribution to documentation, style and quality checks must pass 
     See :doc:`build-check` for how to set up and run the builds and checks on documentation.
 
 In addition to automated checks, perform visual checks to ensure that documentation renders as intended.
+Read the Docs' `visual diff <https://docs.readthedocs.com/platform/stable/visual-diff.html>`_ feature might help find what you've changed.
 
-icalendar is configured with Read the Docs to build pull request previews of documentation.
-When a pull request is opened on a branch and there are changes to any documentation files, Read the Docs will build a preview of the documentation, and insert a link to the build in the pull request description.
-If there's no link, either there are no changes to documentation files or the branch isn't in the icalendar repository.
-All pull request preview builds are listed on Read the Docs at `icalendar builds <https://app.readthedocs.org/projects/icalendar/builds/>`_.
+..  include:: ../../_include/rtd-preview-navigate.inc
 
 Always pay attention to errors and continuous integration failures, and attempt to resolve them.
 Warnings may provide helpful information.
