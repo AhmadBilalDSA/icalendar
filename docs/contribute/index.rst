@@ -35,7 +35,7 @@ Triage and review
 
 -   Comment on and resolve issues.
 -   Triage open issues and `pull requests <https://github.com/PyCalendar/icalendar/pulls>`_.
--   :ref:`Give a peer review peer-reviews`.
+-   :ref:`Give a peer review <peer-reviews>`.
 -   Reproduce an issue and add a comment with your findings.
 
 Documentation
