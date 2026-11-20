@@ -119,7 +119,18 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
 
     If there are any changes to the module, then open a pull request and merge it.
 
-#.  Set an environment variable to use in subsequent commands during the release process.
+#.  Determine the new version of icalendar.
+
+    .. code-block:: shell
+
+        make new-version
+
+    .. note::
+
+        :program:`make new-version` reads the version from the ``main`` branch.
+        For a backport release on a ``*.x`` branch, set ``VERSION`` manually instead.
+
+#.  Copy and paste the new version into an environment variable to use in subsequent commands during the release process.
 
     .. code-block:: shell
 
@@ -225,16 +236,16 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
 
     #.  Next, create a tag, and push the tag.
 
-        .. code-block:: shell
-
-            git tag "v$VERSION"
-            git push upstream "v$VERSION" # to PyCalendar/icalendar
-
         .. warning::
 
             Once a tag is pushed to the repository, it must not be re-tagged or deleted.
             This creates issues for downstream repositories.
             See :issue:`1033`.
+
+        .. code-block:: shell
+
+            git tag "v$VERSION"
+            git push upstream "v$VERSION" # to PyCalendar/icalendar
 
 #.  Once the tag is pushed and its `CI tests`_ pass, check `GitHub Actions <https://github.com/PyCalendar/icalendar/actions>`_.
     The ``deploy-tag-to-pypi`` and ``deploy-github-release`` jobs will wait for a manual approval.
@@ -247,8 +258,10 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
         tests: PyPI is waiting for your review
 
     Approve the deployment in GitHub Actions.
-    PyPI publishing uses `Trusted Publishing (OIDC) <https://docs.pypi.org/trusted-publishers/>`_; no API token is needed.
-    The approval window is 30 days; if it expires, push a new tag with a bumped version number.
+    PyPI publishing uses `Trusted Publishing (OIDC) <https://docs.pypi.org/trusted-publishers/>`_.
+    No API token is needed.
+    The approval window is 30 days.
+    If it expires, push a new tag with a bumped version number.
 
 #.  Update the version switcher file :file:`docs/_static/version-switcher.json`.
 
@@ -365,17 +378,17 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
 
 #.  Advance the ``*.x`` stable branch to the new tag so it stays current for future backports.
 
+    .. note::
+
+        If the stable branch is behind the latest tag, push it forward before starting any backport.
+        A branch that's out of date causes cherry-pick conflicts and forces a version bump.
+
     .. code-block:: shell
 
         git checkout 7.x
         git pull
         git merge main
         git push  # to PyCalendar/icalendar
-
-    .. note::
-
-        If the stable branch is behind the latest tag, push it forward before starting any backport.
-        A branch that's out of date causes cherry-pick conflicts and forces a version bump.
 
 #.  Add a comment to each of the issues mentioned in the new release.
 
@@ -389,12 +402,12 @@ Pre-releases
 ------------
 
 Pre-releases use `PEP 440 <https://peps.python.org/pep-0440/>`_ suffixes: ``8.0.0a1``, ``8.0.0b1``, ``8.0.0rc1``.
-The release steps are the same as a standard release, with these differences.
+The release steps are the same as a standard release, with the following differences.
 
 The tag goes on ``main``, not on a ``*.x`` branch.
 When the stable branch is eventually cut, follow the standard process from :ref:`new-releases`.
 
-After the GitHub release is created, check that the :guilabel:`This is a pre-release` checkbox is set on the release page.
+After you create the GitHub release, check that the :guilabel:`This is a pre-release` checkbox is set on the release page.
 The workflow sets it automatically for PEP 440 pre-release version tags.
 If the checkbox is not set, edit the release on GitHub and set it manually before the release is widely announced.
 
@@ -433,9 +446,9 @@ A backport release cherry-picks specific commits onto a ``*.x`` stable branch to
         git cherry-pick <commit-hash> [<commit-hash> ...]
 
     Conflicts between branches are common, usually around error types or control-flow that diverged.
-    After resolving, run ``pytest`` to confirm no new failures.
+    After resolving any conflicts, run ``pytest`` to confirm that tests pass.
 
-#.  Add a news fragment in ``news/``, then build the changelog:
+#.  Add a news fragment in ``news/``, then build the change log:
 
     .. code-block:: shell
 
@@ -458,13 +471,15 @@ A backport release cherry-picks specific commits onto a ``*.x`` stable branch to
 
     .. warning::
 
-        Tags cannot be moved or deleted once pushed.
-        If a release turns out to be broken, cut a new version; don't attempt to retag.
+        Tags can't be moved or deleted once pushed.
+        If a release turns out to be broken, cut a new version.
+        Don't attempt to retag.
         See :issue:`1033`.
 
 #.  Approve the ``deploy-tag-to-pypi`` and ``deploy-github-release`` jobs in `GitHub Actions <https://github.com/PyCalendar/icalendar/actions>`_ when they appear.
     Only maintainers listed as Required Reviewers in :menuselection:`Settings --> Environments --> PyPI` can approve.
-    The approval window is 30 days; after that you'd need to retag with a new version.
+    The approval window is 30 days.
+    After that, you'd need to retag the commit with a new version.
 
 #.  Comment on each fixed issue:
 
@@ -478,7 +493,7 @@ A backport release cherry-picks specific commits onto a ``*.x`` stable branch to
 Security releases
 -----------------
 
-A security release follows the :ref:`backport-releases` process, with embargo until the fix ships.
+A security release follows the :ref:`backport-releases` process, with an embargo until the fix ships.
 
 #.  Don't discuss the vulnerability publicly until the fix is released.
     If someone files a public issue, ask them to use `GitHub's private vulnerability reporting <https://github.com/PyCalendar/icalendar/security/advisories/new>`_ instead, and close the public issue.
@@ -502,7 +517,7 @@ Links
 
 This section contains useful links for maintainers and collaborators.
 
--   To remove private information from an iCalendar file for bug reports, use `icalendar-anonymizer <https://github.com/pycalendar/icalendar-anonymizer>`_ either through its `website <https://icalendar-anonymizer.com/>`_ or `install it locally <https://docs.icalendar-anonymizer.com/latest/installation.html>`_.
+-   To remove private information from an iCalendar file for bug reports, use `icalendar-anonymizer <https://github.com/PyCalendar/icalendar-anonymizer>`_ either through its `website <https://icalendar-anonymizer.com/>`_ or `install it locally <https://docs.icalendar-anonymizer.com/latest/installation.html>`_.
 -   `Python Calendaring Ecosystem <https://pycal.org/>`_
 -   `Future of icalendar, looking for maintainer #360 <https://github.com/PyCalendar/icalendar/discussions/360>`_
 -   `Comment on the Plone tests running with icalendar <https://github.com/PyCalendar/icalendar/pull/447#issuecomment-1277643634>`_
