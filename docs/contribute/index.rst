@@ -5,7 +5,7 @@ Contribute
 ..  important::
 
     Until further notice, maintainers alone are unable to respond to the high volume of new pull requests.
-    To help improve this situation, it's strongly recommended that you :ref:`conduct-a-peer-review` instead of opening a new pull request.
+    To help improve this situation, it's strongly recommended that you follow :ref:`peer-reviews` instead of opening a new pull request.
 
 This guide describes how to contribute to icalendar.
 
@@ -35,7 +35,7 @@ Triage and review
 
 -   Comment on and resolve issues.
 -   Triage open issues and `pull requests <https://github.com/PyCalendar/icalendar/pulls>`_.
--   :ref:`conduct-a-peer-review`.
+-   :ref:`Give a peer review peer-reviews`.
 -   Reproduce an issue and add a comment with your findings.
 
 Documentation
@@ -179,10 +179,10 @@ The maintainers may close pull requests without providing feedback that they dee
 The maintainers may also take further action, including suspend, ban, or report GitHub users, as described in Python Calendaring Ecosystem's `Code of Conduct <https://pycal.org/code-of-conduct/>`_.
 
 
-..  _conduct-a-peer-review:
+..  _peer-reviews:
 
-Conduct a peer review
----------------------
+Peer reviews
+------------
 
 ..  important::
 
@@ -192,6 +192,14 @@ Conduct a peer review
 A peer review is when you look at an open pull request of another contributor, and make comments and suggestions to improve its quality.
 You'll help your colleagues, learn from one another, and gain valuable communication and collaboration skills that every programming job requires.
 It will also help maintainers handle high priority items in a timely manner, such as addressing security reports, making releases, and conducting final code and documentation reviews.
+
+You can give a peer review to a colleague or request one from a colleague.
+
+To request a peer review, you can either:
+
+-   Mention your colleague in a comment by typing the ``@`` symbol followed by their username ``@github-username``.
+-   From the pull request's :guilabel:`Reviewers` panel click on the gear icon, and start typing a username and select them from the list.
+    Users who aren't a member of the PyCalendar organization won't appear.
 
 
 Good peer review
@@ -274,6 +282,7 @@ When submitting your pull request, complete the description template on GitHub, 
 #.  Add a test which proves your fix and passes.
 #.  Run all tests to ensure your changes don't break any existing functionality.
 #.  :doc:`Add or edit documentation <documentation/index>`, both as docstrings to be rendered in the :doc:`API reference documentation <../reference/api/icalendar>` and narrative documentation, as necessary.
+#.  Request a :ref:`peer review <peer-reviews>`.
 
 The maintainers may close pull requests without providing feedback that they deem to be spam, AI slop, abuse, or that do not comply with pull request requirements.
 The maintainers may also take further action, including suspend, ban, or report GitHub users, as described in Python Calendaring Ecosystem's `Code of Conduct <https://pycal.org/code-of-conduct/>`_.
