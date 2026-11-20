@@ -29,6 +29,8 @@ Repology
 recur.recur
 reformats
 RFCs?
+GHSAs?
+retag(ged|ging|s)?
 SARIF
 sphinx_copybutton
 sphinx_design
