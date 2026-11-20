@@ -1220,7 +1220,8 @@ class Component(CaselessDict):
             - :class:`bytes` if called with no arguments.
 
         Raises:
-            TypeError: If ``destination`` is neither an XML Element nor a file-like
+            TypeError: If ``destination`` is neither an XML
+                :class:`~xml.etree.ElementTree.Element` nor a file-like
                 object, or if ``indent`` is neither an integer nor a string.
             ~icalendar.error.InvalidCalendar: If an XML property cannot be written
                 to xCal. See :meth:`vXml.to_xcal() <icalendar.prop.xml.vXml.to_xcal>`.
@@ -1341,7 +1342,7 @@ class Component(CaselessDict):
             True
 
         """
-        from icalendar.parser.xcal.component import XCalComponentParser
+        from icalendar.parser.xcal.component import XCalComponentsParser
 
         if isinstance(xcal, Path):
             xcal = xcal.open("rb")
@@ -1355,7 +1356,7 @@ class Component(CaselessDict):
             raise TypeError(
                 f"Expected an XML Element, bytes, Path, or file object. Got {xcal}"
             )
-        parser = XCalComponentParser(
+        parser = XCalComponentsParser(
             element, cls._get_component_factory(), cls.types_factory
         )
         components = []

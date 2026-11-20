@@ -66,7 +66,7 @@ class vXml(vText):
     Use :attr:`element` to get the XML element.
 
     In xCal, the XML property does not exist.
-    Instead the XML elements are directly copied into the ``<properties>`` element,
+    Instead the XML elements are directly copied into the :term:`IC:properties` element,
     see :rfc:`6321#section-4.1`.
     :mod:`~xml.etree.ElementTree` chooses the namespace prefixes there.
 
@@ -219,7 +219,7 @@ class vXml(vText):
 
         All other property classes in :mod:`icalendar.prop` add children to the ``element`` parameter.
         :class:`vXml` is special because it holds a single XML 1.0 element per :rfc:`6321#section-4.1`.
-        Such an element resides directly inside the ``<properties>`` tag.
+        Such an element resides directly inside the IC:properties element.
         Because of this, the tag, attributes, text, and children of ``element``
         are replaced with the XML 1.0 element contained in this object.
 

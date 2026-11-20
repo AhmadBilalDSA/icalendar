@@ -605,10 +605,10 @@ class Parameters(CaselessDict[str | list[str]]):
 
     @classmethod
     def from_xcal(cls, element: Element | ElementAdapter) -> Parameters:
-        """Parse xCal from :rfc:`6321`.
+        """Parse xCal according to :rfc:`6321`.
 
         Parameters:
-            element: The xCal element to parse.
+            element: Required. The xCal element to parse.
 
         Raises:
             ~error.XCalParsingError: If the provided xCal is invalid.
@@ -649,7 +649,8 @@ class Parameters(CaselessDict[str | list[str]]):
         in the element.
 
         Parameters:
-            element: The parameters are added to this element as first child.
+            element: Required. The parameters are added to this element as the
+                first child.
         """
         if not self or (len(element) >= 1 and element[0].tag == "parameters"):
             return  # exit quickly
@@ -682,7 +683,10 @@ class Parameters(CaselessDict[str | list[str]]):
             element.insert(0, result)
 
     def get_multiple(self, key: str) -> list:
-        """Get mulitple values as a list.
+        """Get multiple values as a list.
+
+        Parameters:
+            key: Required. The key of the parameter to get.
 
         .. note::
 

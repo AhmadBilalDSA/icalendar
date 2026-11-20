@@ -43,11 +43,11 @@ def _strip_unsafe_text_chars(value: object) -> str:
     :class:`uuid.UUID`. Coerce those to ``str`` the same way ``str.__new__``
     did before this filter ran.
 
-    .. seealso::
+    ..  seealso::
 
-        :func:`~icalendar.parser.xcal.string._to_valid_xml_string`
-        `Issue 1712 <https://github.com/PyCalendar/icalendar/issues/1712>`_,
-        `Issue 1888 <https://github.com/PyCalendar/icalendar/issues/1888>`_,
+        -   :func:`~icalendar.parser.xcal.string._to_valid_xml_string`
+        -   `Issue 1712 <https://github.com/PyCalendar/icalendar/issues/1712>`_
+        -   `Issue 1888 <https://github.com/PyCalendar/icalendar/issues/1888>`_
     """
     if not isinstance(value, str):
         value = str(value)
@@ -226,10 +226,11 @@ class vText(str):
     @classmethod
     @from_xcal_wrapper
     def from_xcal(cls, parser: XCalParser, params: Parameters) -> Self:
-        """Parse xCal from :rfc:`6321`.
+        """Parse xCal according to :rfc:`6321`.
 
         Parameters:
-            xml: The XML to parse or a parser.
+            parser: Required. The xCal to parse or a parser.
+            params: Required. The parameters of the xCal element.
 
         Raises:
             ~error.XCalParsingError: If the provided xCal is invalid.
@@ -240,10 +241,11 @@ class vText(str):
     @classmethod
     @from_xcal_wrapper
     def from_xcal_in_recur(cls, parser: XCalParser, _params: Parameters) -> Self:
-        """Parse xCal from :rfc:`6321`.
+        """Parse xCal according to :rfc:`6321`.
 
         Parameters:
-            xml: The XML to parse or a parser.
+            parser: Required. The xCal to parse or a parser.
+            _params: Required. The parameters of the xCal element.
 
         Raises:
             ~error.XCalParsingError: If the provided xCal is invalid.
