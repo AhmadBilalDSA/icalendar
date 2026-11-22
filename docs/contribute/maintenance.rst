@@ -151,7 +151,7 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
         push:
           branches:
           - main
-          - 7.x
+          - 8.x
           tags:
           - v*
 
@@ -205,13 +205,13 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
 
             .. code-block:: shell
 
-                git switch -c 7.x
+                git switch -c 8.x
 
         -   For a minor or patch release, check out the existing branch, and update it.
 
             .. code-block:: shell
 
-                git checkout 7.x
+                git checkout 8.x
                 git pull
 
     #.  Next, merge ``main`` into the release branch.
@@ -226,7 +226,7 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
 
             .. code-block:: shell
 
-                git push -u upstream 7.x  # to PyCalendar/icalendar
+                git push -u upstream 8.x  # to PyCalendar/icalendar
 
         -   For a minor or patch release, just push.
 
@@ -247,8 +247,7 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
             git tag "v$VERSION"
             git push upstream "v$VERSION" # to PyCalendar/icalendar
 
-#.  Once the tag is pushed and its `CI tests`_ pass, check `GitHub Actions <https://github.com/PyCalendar/icalendar/actions>`_.
-    The ``deploy-tag-to-pypi`` and ``deploy-github-release`` jobs will wait for a manual approval.
+#.  In the CI checks at the end of the PR, the ``deploy-tag-to-pypi`` and ``deploy-github-release`` jobs will wait for a manual approval.
     Maintainers listed as Required Reviewers in :menuselection:`Settings --> Environments --> PyPI` will receive an email:
 
     .. code-block:: text
@@ -257,9 +256,7 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
 
         tests: PyPI is waiting for your review
 
-    Approve the deployment in GitHub Actions.
-    PyPI publishing uses `Trusted Publishing (OIDC) <https://docs.pypi.org/trusted-publishers/>`_.
-    No API token is needed.
+    Approve the deployment.
     The approval window is 30 days.
     If it expires, push a new tag with a bumped version number.
 
@@ -380,12 +377,12 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
 
     .. note::
 
-        If the stable branch is behind the latest tag, push it forward before starting any backport.
-        A branch that's out of date causes cherry-pick conflicts and forces a version bump.
+        If the stable branch is behind the latest tag, set it to the tag before starting any backport.
+        For example, if ``8.x`` is at ``v8.0.0`` but ``v8.0.1`` has been released, reset it: ``git checkout 8.x && git reset --hard v8.0.1``.
 
     .. code-block:: shell
 
-        git checkout 7.x
+        git checkout 8.x
         git pull
         git merge main
         git push  # to PyCalendar/icalendar
@@ -436,7 +433,7 @@ A backport release cherry-picks specific commits onto a ``*.x`` stable branch to
 
     .. code-block:: shell
 
-        git checkout 7.x
+        git checkout 8.x
         git pull
 
 #.  Cherry-pick the commits from ``main``:
