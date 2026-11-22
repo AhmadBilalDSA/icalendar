@@ -47,6 +47,8 @@ class vBroken(vText):
     def __getattr__(self, name: str):
         """Raise BrokenCalendarProperty for attribute access.
 
+        :meta private:
+
         Attributes like ``.dt`` that the expected type would have
         raise :class:`~icalendar.error.BrokenCalendarProperty`
         with the original parse error chained. Private attributes

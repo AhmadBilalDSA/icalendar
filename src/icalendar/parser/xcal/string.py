@@ -53,8 +53,11 @@ matched here. They can't be encoded as UTF-8, and ``to_ical()`` rejects them.
 def _to_valid_xml_string(string: str) -> str:
     """Remove all characters that are not valid XML characters.
 
+    :meta private:
+
     Parameters:
-        string: The string from which to remove invalid XML characters.
+        string: The string from which to remove characters that are not valid
+            XML characters.
 
     Returns:
         A string with all characters that are not valid XML characters removed.

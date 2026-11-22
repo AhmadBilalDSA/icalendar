@@ -139,7 +139,10 @@ class vDDDTypes(TimeBase):
         return [cls(date(2025, 11, 10)), cls(timedelta(days=1, hours=5))]
 
     def _get_value(self) -> str | None:
-        """Determine the VALUE parameter."""
+        """Determine the VALUE parameter.
+
+        :meta private:
+        """
         return self.to_property_type().VALUE
 
     from icalendar.param import VALUE

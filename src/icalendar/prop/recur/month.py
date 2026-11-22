@@ -90,11 +90,17 @@ class vMonth(int):
         self._leap = value
 
     def __repr__(self) -> str:
-        """repr(self)"""
+        """repr(self)
+
+        :meta private:
+        """
         return f"{self.__class__.__name__}({str(self)!r})"
 
     def __str__(self) -> str:
-        """str(self)"""
+        """str(self)
+
+        :meta private:
+        """
         return f"{int(self)}{'L' if self.leap else ''}"
 
     @classmethod

@@ -64,7 +64,10 @@ class vCategory:
         return ical.split(",")
 
     def __eq__(self, other: object) -> bool:
-        """self == other"""
+        """self == other
+
+        :meta private:
+        """
         if isinstance(other, vCategory):
             return self.cats == other.cats
         if isinstance(other, list):
@@ -72,11 +75,17 @@ class vCategory:
         return NotImplemented
 
     def __hash__(self) -> int:
-        """Hash of the vCategory object."""
+        """Hash of the vCategory object.
+
+        :meta private:
+        """
         return hash(tuple(self.cats))
 
     def __repr__(self) -> str:
-        """String representation."""
+        """String representation.
+
+        :meta private:
+        """
         return f"{self.__class__.__name__}({self.cats}, params={self.params})"
 
     def to_jcal(self, name: str) -> list:

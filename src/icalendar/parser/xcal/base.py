@@ -72,7 +72,10 @@ class XCalParser:
 
     @staticmethod
     def _sanitize_tags(tags: str | Sequence[str]) -> set[str]:
-        """Return a set of tags to test."""
+        """Return a set of tags to test.
+
+        :meta private:
+        """
         if isinstance(tags, str):
             return {tags.lower()}
         return {t.lower() for t in tags}
@@ -120,6 +123,8 @@ class XCalParser:
 
     def _parse_tag(self, tags: set[str]) -> ElementAdapter | None:
         """Find a child tag and return it.
+
+        :meta private:
 
         This child is then considered parsed.
         """
