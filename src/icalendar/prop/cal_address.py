@@ -92,6 +92,8 @@ class vCalAddress(str):
     def __eq__(self, other: object) -> bool:
         """Compare calendar addresses by email address.
 
+        :meta private:
+
         Two addresses are equal if their email addresses match
         case-insensitively. The ``mailto:`` prefix is optional on either
         side, so ``mailto:user@example.com`` equals ``user@example.com``.
@@ -128,6 +130,8 @@ class vCalAddress(str):
     def __ne__(self, other: object) -> bool:
         """Negation of :meth:`__eq__`.
 
+        :meta private:
+
         This method is required because :class:`vCalAddress` extends
         :class:`str`. Without it, ``!=`` would use :meth:`str.__ne__`
         using plain string comparison and could disagree with
@@ -140,7 +144,10 @@ class vCalAddress(str):
         return not result
 
     def __hash__(self) -> int:
-        """Hash of the lowercased email address, consistent with :meth:`__eq__`."""
+        """Hash of the lowercased email address, consistent with :meth:`__eq__`.
+
+        :meta private:
+        """
         return hash(self.email.lower())
 
     @property
@@ -262,6 +269,8 @@ class vCalAddress(str):
     @staticmethod
     def _get_email(email: str) -> str:
         """Extract email and add mailto: prefix if needed.
+
+        :meta private:
 
         Handles case-insensitive mailto: prefix checking.
 

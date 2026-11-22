@@ -21,8 +21,10 @@ fully trusted input.
 def _clamp_repeat(n: int) -> int:
     """Return *n* clamped to ``[0, MAX_ALARM_REPEAT]``.
 
-    Negative values are treated as 0. When :data:`MAX_ALARM_REPEAT` is ``-1``
-    the value is returned unchanged after clamping negatives to 0.
+    :meta private:
+
+    Negative values are treated as ``0``. When :data:`MAX_ALARM_REPEAT` is ``-1``
+    the value is returned unchanged after clamping negatives to ``0``.
     """
     if n < 0:
         return 0

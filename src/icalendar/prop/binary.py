@@ -98,11 +98,17 @@ class vBinary:
         return f"data:{quote(media_type, safe='/;=')};base64,{self.base64data}"
 
     def __eq__(self, other: object) -> bool:
-        """self == other"""
+        """self == other
+
+        :meta private:
+        """
         return isinstance(other, vBinary) and self.bytes == other.bytes
 
     def __hash__(self) -> int:
-        """Hash of the vBinary object."""
+        """Hash of the vBinary object.
+
+        :meta private:
+        """
         return hash(self.bytes)
 
     @classmethod

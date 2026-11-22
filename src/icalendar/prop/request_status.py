@@ -69,7 +69,10 @@ class vRequestStatus(vText):
     __match: re.Match | None = None
 
     def _get_match(self) -> re.Match | None:
-        """Return a match for parsing."""
+        """Return a match for parsing.
+
+        :meta private:
+        """
         if self.__match is None:
             self.__match = REQUEST_STATUS_GRAMMAR.match(self)
         return self.__match
@@ -101,7 +104,10 @@ class vRequestStatus(vText):
         return match.group("code")
 
     def _unescape(self, string: str):
-        """Unescape a string."""
+        """Unescape a string.
+
+        :meta private:
+        """
         return UNESCAPE.sub(r"\1", string)
 
     @property

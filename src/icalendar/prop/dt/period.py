@@ -26,6 +26,8 @@ if TYPE_CHECKING:
 def _to_midnight(dt: date, tz: tzinfo | None) -> datetime:
     """Convert a date to the datetime at midnight.
 
+    :meta private:
+
     Parameters:
         dt: The date to convert.
         tz: The timezone of the result, or ``None`` for a naive result.
@@ -46,6 +48,8 @@ def _to_period_datetimes(
 ) -> tuple[datetime, datetime | timedelta]:
     """Convert the dates of a period to datetimes.
 
+    :meta private:
+
     :rfc:`5545#section-3.3.9` builds a period from datetimes only, but calendars in the
     wild use dates. A date becomes midnight so that the period can be used
     and written back out.
@@ -55,8 +59,8 @@ def _to_period_datetimes(
     duration.
 
     Parameters:
-        start: The start of the period.
         end_or_duration: The end of the period or its duration.
+        start: The start of the period.
 
     Returns:
         The start and the end or duration, with any date converted.

@@ -64,7 +64,10 @@ class vDDDLists:
         return False
 
     def __repr__(self):
-        """String representation."""
+        """String representation.
+
+        :meta private:
+        """
         return f"{self.__class__.__name__}({self.dts})"
 
     @classmethod

@@ -259,6 +259,8 @@ def q_join(lst: Sequence[str], sep: str = ",", always_quote: bool = False) -> st
 def _single_string_parameter(upper: bool = False):
     """Create a parameter getter/setter for a single string parameter.
 
+    :meta private:
+
     Parameters:
         upper: Convert the return value of the property getter to uppercase.
 
@@ -304,6 +306,10 @@ class Parameters(CaselessDict[str | list[str]]):
     It knows nothing of datatypes.
     Its main concern is textual structure.
 
+    Parameters:
+        *args: The arguments to parse.
+        **kwargs: The keyword arguments to parse.
+
     Examples:
 
         Modify parameters:
@@ -337,7 +343,6 @@ class Parameters(CaselessDict[str | list[str]]):
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
-        """Create new parameters."""
         if args and args[0] is None:
             # allow passing None
             args = args[1:]
@@ -486,11 +491,13 @@ class Parameters(CaselessDict[str | list[str]]):
     ) -> str | int | float | list[str] | list[int] | list[float]:
         """Convert a parameter value to jCal format.
 
+        :meta private:
+
         Parameters:
-            value: The parameter value
+            value: The parameter value.
 
         Returns:
-            The jCal representation of the parameter value
+            The jCal representation of the parameter value.
         """
         if isinstance(value, list):
             return [self._parameter_value_to_jcal(v) for v in value]
@@ -704,6 +711,8 @@ RFC_6868_UNESCAPE_REGEX = re.compile(r"\^\^|\^n|\^'")
 def _rfc_6868_unescape(param_value: str) -> str:
     """Take care of :rfc:`6868` unescaping.
 
+    :meta private:
+
     - ^^ -> ^
     - ^n -> system specific newline
     - ^' -> "
@@ -724,6 +733,8 @@ RFC_6868_ESCAPE_REGEX = re.compile(r'\^|\r\n|\r|\n|"')
 
 def _rfc_6868_escape(param_value: str) -> str:
     """Take care of :rfc:`6868` escaping.
+
+    :meta private:
 
     - ^ -> ^^
     - " -> ^'

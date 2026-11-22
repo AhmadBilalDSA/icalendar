@@ -150,7 +150,10 @@ class ElementAdapter:
             ) from e
 
     def __repr__(self) -> str:
-        """Return the text representation of this element."""
+        """Return the text representation of this element.
+
+        :meta private:
+        """
         return f"Element@{self.get_xpath()}"
 
     def make_parent(self, tag: str) -> ElementAdapter:
