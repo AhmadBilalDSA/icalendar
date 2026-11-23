@@ -143,7 +143,7 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
         git checkout main
         git pull
 
-#.  If you'll create a new *major* release, update :file:`.github/workflows/tests.yml` to include the new release branch in the list of branches that trigger the CI tests.
+#.  If you'll create a new *major* release, update :file:`.github/workflows/tests.yml` to include the new release branch in the list of branches that trigger the CI checks.
 
     ..  code-block:: yaml
         :emphasize-lines: 4
@@ -186,11 +186,11 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
         git commit -m "version $VERSION"
         git push  # to PyCalendar/icalendar
 
-#.  Confirm the `CI tests <https://github.com/PyCalendar/icalendar/actions>`_ are running on the commit and pass before continuing.
+#.  Confirm the CI checks are running on the commit and pass before continuing, either at the end of the pull request or under the repository tab `Actions <https://github.com/PyCalendar/icalendar/actions>`_.
     No tag should be pushed until CI is green on the version commit.
     If CI is not running, no release can be issued.
 
-#.  Create a tag for the release on its release branch ``*.x``, push, and make sure the `CI tests`_ are running.
+#.  Create a tag for the release on its release branch ``*.x``, push, and make sure the CI checks are running.
 
     a.  First, make sure you're on the ``main`` branch and it's current, in case someone else updated ``main`` while tests ran.
 
@@ -247,7 +247,7 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
             git tag "v$VERSION"
             git push upstream "v$VERSION" # to PyCalendar/icalendar
 
-#.  In the CI checks at the end of the PR, the ``deploy-tag-to-pypi`` and ``deploy-github-release`` jobs will wait for a manual approval.
+#.  In the CI checks under the repository tab `Actions`_, the ``deploy-tag-to-pypi`` and ``deploy-github-release`` jobs will wait for a manual approval.
     Maintainers listed as Required Reviewers in :menuselection:`Settings --> Environments --> PyPI` will receive an email:
 
     .. code-block:: text
@@ -256,7 +256,7 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
 
         tests: PyPI is waiting for your review
 
-    Approve the deployment.
+    Approve the deployment under `Actions`_.
     The approval window is 30 days.
     If it expires, push a new tag with a bumped version number.
 
