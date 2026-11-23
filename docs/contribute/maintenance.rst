@@ -378,7 +378,11 @@ However, only people with ``Environments/Configure PyPI`` access can approve an 
     .. note::
 
         If the stable branch is behind the latest tag, set it to the tag before starting any backport.
-        For example, if ``8.x`` is at ``v8.0.0`` but ``v8.0.1`` has been released, reset it: ``git checkout 8.x && git reset --hard v8.0.1``.
+        For example, if ``8.x`` is at ``v8.0.0`` but ``v8.0.1`` has been released, reset it.
+
+        ..  code-block:: shell
+
+            git checkout 8.x && git reset --hard v8.0.1
 
     .. code-block:: shell
 
