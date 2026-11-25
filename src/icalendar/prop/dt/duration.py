@@ -177,6 +177,11 @@ class vDuration(TimeBase):
         """The time delta for compatibility."""
         return self.td
 
+    @property
+    def ical_value(self) -> timedelta:
+        """Duration as a :class:`~datetime.timedelta` according to :rfc:`5545#section-3.3.6`."""
+        return self.td
+
     @classmethod
     def examples(cls) -> list[Self]:
         """Examples of vDuration."""
@@ -232,10 +237,11 @@ class vDuration(TimeBase):
     @classmethod
     @from_xcal_wrapper
     def from_xcal(cls, parser: XCalParser, params: Parameters) -> Self:
-        """Parse xCal from :rfc:`6321`.
+        """Parse xCal according to :rfc:`6321`.
 
         Parameters:
-            xml: The XML to parse or a parser.
+            parser: Required. The xCal to parse or a parser.
+            params: Required. The parameters of the xCal element.
 
         Raises:
             ~error.XCalParsingError: If the provided xCal is invalid.

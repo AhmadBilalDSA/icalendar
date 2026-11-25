@@ -42,6 +42,8 @@ def _get_rdates(
 ) -> list[tuple[date, None] | tuple[datetime, None] | tuple[datetime, datetime]]:
     """The RDATE property defines the list of DATE-TIME values for recurring components.
 
+    :meta private:
+
     RDATE is defined in :rfc:`5545`.
     The return value is a list of tuples ``(start, end)``.
 
@@ -94,7 +96,7 @@ def _get_rdates(
         Duplicate instances are ignored.
 
     Example:
-        Below, we set one RDATE in a list and get the resulting tuple of start and end.
+        Set one RDATE in a list, and get the resulting tuple of start and end.
 
         .. code-block:: pycon
 
@@ -112,8 +114,8 @@ def _get_rdates(
         Modifying the returned list does not change the RDATE value. Assign to
         ``rdates`` for the relevant component or use
         :meth:`Component.add <icalendar.cal.component.Component.add>` instead.
-        If you want to compute recurrences, have a look at
-        `Related Projects <https://github.com/collective/icalendar/blob/main/README.rst#related-projects>`_.
+        If you want to compute recurrences, see
+        `Related Projects <https://github.com/PyCalendar/icalendar/blob/main/README.rst#related-projects>`_.
 
     """
     result = []
@@ -136,9 +138,12 @@ def _get_rdates(
 def _set_rdates(self: Component, value) -> None:
     """Set the RDATE values, replacing any existing ones.
 
-    ``value`` is a list as returned by :attr:`rdates` (each item a date, a
-    datetime, or a ``(start, end)`` period tuple). Setting an empty list or
-    :obj:`None` removes the RDATE property.
+    :meta private:
+
+    Parameters:
+        value: A list, as returned by :attr:`rdates`, where each item is either a date,
+            a datetime, or a ``(start, end)`` period tuple. Setting an empty list or
+            :obj:`None` removes the RDATE property.
     """
     _del_rdates(self)
     if value:
@@ -146,7 +151,10 @@ def _set_rdates(self: Component, value) -> None:
 
 
 def _del_rdates(self: Component) -> None:
-    """Delete all RDATE values."""
+    """Delete all RDATE values.
+
+    :meta private:
+    """
     self.pop("RDATE", None)
 
 
@@ -154,9 +162,10 @@ rdates_property = property(_get_rdates, _set_rdates, _del_rdates)
 
 
 def _get_exdates(self: Component) -> list[date | datetime]:
-    """EXDATE defines the list of DATE-TIME exceptions for recurring components.
+    """EXDATE defines the list of DATE-TIME exceptions for recurring components
+    according to :rfc:`5545`.
 
-    EXDATE is defined in :rfc:`5545`.
+    :meta private:
 
     Value Type:
         The default value type for this property is DATE-TIME.
@@ -201,7 +210,7 @@ def _get_exdates(self: Component) -> list[date | datetime]:
         dependencies by other properties such as the "RECURRENCE-ID".
 
     Example:
-        Below, we add an exdate in a list and get the resulting list of exdates.
+        Add an EXDATE in a list, and get the resulting list of EXDATEs.
 
         .. code-block:: pycon
 
@@ -219,8 +228,8 @@ def _get_exdates(self: Component) -> list[date | datetime]:
         Modifying the returned list does not change the EXDATE value. Assign to
         ``exdates`` for the relevant component or use
         :meth:`Component.add <icalendar.cal.component.Component.add>` instead.
-        If you want to compute recurrences, have a look at
-        `Related Projects <https://github.com/collective/icalendar/blob/main/README.rst#related-projects>`_.
+        If you want to compute recurrences, see
+        `Related Projects <https://github.com/PyCalendar/icalendar/blob/main/README.rst#related-projects>`_.
 
     """
     result = []
@@ -236,8 +245,12 @@ def _get_exdates(self: Component) -> list[date | datetime]:
 def _set_exdates(self: Component, value) -> None:
     """Set the EXDATE values, replacing any existing ones.
 
-    ``value`` is a list as returned by :attr:`exdates` (each item a date or a
-    datetime). Setting an empty list or :obj:`None` removes the EXDATE property.
+    :meta private:
+
+    Parameters:
+        value:  A list, as returned by :attr:`exdates`, where each item is a date
+            or a datetime. Setting an empty list or :obj:`None` removes the EXDATE
+            property.
     """
     _del_exdates(self)
     if value:
@@ -245,7 +258,10 @@ def _set_exdates(self: Component, value) -> None:
 
 
 def _del_exdates(self: Component) -> None:
-    """Delete all EXDATE values."""
+    """Delete all EXDATE values.
+
+    :meta private:
+    """
     self.pop("EXDATE", None)
 
 
@@ -254,6 +270,8 @@ exdates_property = property(_get_exdates, _set_exdates, _del_exdates)
 
 def _get_rrules(self: Component) -> list[vRecur]:
     """RRULE defines a rule or repeating pattern for recurring components.
+
+    :meta private:
 
     RRULE is defined in :rfc:`5545`.
     :rfc:`7529` adds the ``SKIP`` parameter :class:`icalendar.prop.vSkip`.
@@ -355,7 +373,7 @@ def _get_rrules(self: Component) -> list[vRecur]:
         Use :meth:`Component.add <icalendar.cal.component.Component.add>` to add values.
 
         If you want to compute recurrences, have a look at
-        `Related Projects <https://github.com/collective/icalendar/blob/main/README.rst#related-projects>`_.
+        `Related Projects <https://github.com/PyCalendar/icalendar/blob/main/README.rst#related-projects>`_.
 
     """  # noqa: E501
     rrules = self.get("RRULE", [])
@@ -448,6 +466,29 @@ def single_int_property(
     return property(fget, fset, fdel, doc)
 
 
+def _decode_single_utc_value(name: str, value: object) -> date | datetime:
+    """Extract and check one datetime value of a singleton UTC property.
+
+    :meta private:
+
+    Parameters:
+        name: The name of the property.
+        value: The value of the property.
+
+    Raises:
+        ValueError: If a text or unknown value cannot be parsed.
+        InvalidCalendar: If the decoded value is not a date or datetime.
+    """
+    if isinstance(value, (vText, vUnknown)):
+        # we might be in an attribute that is not typed
+        value = vDDDTypes.from_ical(value)
+    else:
+        value = getattr(value, "dt", value)
+    if not isinstance(value, date):
+        raise InvalidCalendar(f"{name} must be a datetime in UTC, not {value}")
+    return value
+
+
 def single_utc_property(name: str, docs: str) -> property:
     """Create a property to access a value of datetime in UTC timezone.
 
@@ -460,15 +501,28 @@ def single_utc_property(name: str, docs: str) -> property:
         """Get the value."""
         if name not in self:
             return None
-        dt = self.get(name)
-        if isinstance(dt, (vText, vUnknown)):
-            # we might be in an attribute that is not typed
-            value = vDDDTypes.from_ical(dt)
-        else:
-            value = getattr(dt, "dt", dt)
-        if value is None or not isinstance(value, date):
-            raise InvalidCalendar(f"{name} must be a datetime in UTC, not {value}")
-        return tzp.localize_utc(value)
+        raw = self.get(name)
+        # Code continues with less indentation
+        # Broken calendars can repeat singleton properties. Keep all values
+        # for serialization; when reading, use the earliest valid value.
+        items = raw if isinstance(raw, list) else [raw]
+        values = []
+        invalid = raw
+        # duplicate lists are tiny, so the loop overhead is negligible
+        for item in items:
+            try:
+                values.append(_decode_single_utc_value(name, item))
+            except (InvalidCalendar, ValueError):  # noqa: PERF203
+                # Report the decoded value as before, or the raw item
+                # when it cannot be decoded.
+                if isinstance(item, (vText, vUnknown)):
+                    invalid = item
+                else:
+                    invalid = getattr(item, "dt", item)
+                continue
+        if not values:
+            raise InvalidCalendar(f"{name} must be a datetime in UTC, not {invalid}")
+        return min(tzp.localize_utc(value) for value in values)
 
     def fset(self: Component, value: datetime | None):
         """Set the value"""
@@ -642,7 +696,13 @@ Examples:
 
 
 def _get_categories(component: Component) -> list[str]:
-    """Get all the categories."""
+    """Get all the categories.
+
+    :meta private:
+
+    Parameters:
+        component: Required. The component from which to extract its categories.
+    """
     categories: vCategory | list[vCategory] | None = component.get("CATEGORIES")
     if isinstance(categories, list):
         _set_categories(
@@ -657,7 +717,14 @@ def _get_categories(component: Component) -> list[str]:
 
 
 def _set_categories(component: Component, cats: Sequence[str] | None) -> None:
-    """Set the categories."""
+    """Set the categories.
+
+    :meta private:
+
+    Parameters:
+        cats: Required. The categories to set in the component.
+        component: Required. The component in which to set categories.
+    """
     if not cats and cats != []:
         _del_categories(component)
         return
@@ -669,7 +736,13 @@ def _set_categories(component: Component, cats: Sequence[str] | None) -> None:
 
 
 def _del_categories(component: Component) -> None:
-    """Delete the categories."""
+    """Delete the categories.
+
+    :meta private:
+
+    Parameters:
+        component: The component from which to remove its categories.
+    """
     component.pop("CATEGORIES", None)
 
 
@@ -731,7 +804,10 @@ See also:
 
 
 def _get_attendees(self: Component) -> list[vCalAddress]:
-    """Get attendees."""
+    """Get attendees.
+
+    :meta private:
+    """
     value = self.get("ATTENDEE")
     if value is None:
         value = []
@@ -746,7 +822,13 @@ ATTENDEE_TYPE_SETTER: TypeAlias = Sequence[vCalAddress | str] | vCalAddress | st
 
 
 def _set_attendees(self: Component, value: ATTENDEE_TYPE_SETTER):
-    """Set attendees."""
+    """Set attendees.
+
+    :meta private:
+
+    Parameters:
+        value: Required. The attendee type to use when setting attendees.
+    """
     _del_attendees(self)
     if value is None:
         return
@@ -762,7 +844,10 @@ def _set_attendees(self: Component, value: ATTENDEE_TYPE_SETTER):
 
 
 def _del_attendees(self: Component):
-    """Delete all attendees."""
+    """Delete all attendees.
+
+    :meta private:
+    """
     self.pop("ATTENDEE", None)
 
 
@@ -1243,10 +1328,7 @@ may appear in recurring ``VEVENT``, ``VTODO``, and ``VJOURNAL`` components.
 def _get_organizer(self: Component) -> vCalAddress | None:
     """ORGANIZER defines the organizer for a calendar component.
 
-    Property Parameters:
-        IANA, non-standard, language, common name,
-        directory entry reference, and sent-by property parameters can be
-        specified on this property.
+    :meta private:
 
     Conformance:
         This property MUST be specified in an iCalendar object
@@ -1280,14 +1362,20 @@ def _get_organizer(self: Component) -> vCalAddress | None:
 
 
 def _set_organizer(self: Component, value: vCalAddress | str | None):
-    """Set the value."""
+    """Set the value.
+
+    :meta private:
+    """
     _del_organizer(self)
     if value is not None:
         self.add("ORGANIZER", value)
 
 
 def _del_organizer(self: Component):
-    """Delete the value."""
+    """Delete the value.
+
+    :meta private:
+    """
     self.pop("ORGANIZER")
 
 
@@ -1295,17 +1383,26 @@ organizer_property = property(_get_organizer, _set_organizer, _del_organizer)
 
 
 def single_string_enum_property(
-    name: str, enum: type[StrEnum], default: StrEnum, docs: str
+    name: str,
+    enum: type[StrEnum],
+    default: StrEnum | str,
+    docs: str,
+    preserve_unknown: bool = False,
 ) -> property:
     """Create a property to access a single string value and convert it to an enum."""
     prop = single_string_property(name, docs, default=default)
 
-    def fget(self: Component) -> StrEnum:
+    def fget(self: Component) -> StrEnum | str:
         """Get the value."""
         value = prop.fget(self)
         if value == default:
             return default
-        return enum(str(value))
+        try:
+            return enum(str(value))
+        except ValueError:
+            if preserve_unknown:
+                return value
+            raise
 
     def fset(self: Component, value: str | StrEnum | None) -> None:
         """Set the value."""
@@ -1475,24 +1572,49 @@ status_property = single_string_enum_property(
     "STATUS",
     STATUS,
     "",
-    """STATUS defines the overall status or confirmation for the calendar component.
+    r"""STATUS defines the overall status or confirmation for the calendar component.
 
-Returns:
-    :class:`icalendar.enums.STATUS`
+In a group-scheduled calendar component, this property is used by the Organizer
+to provide information about the status of an
+:class:`~icalendar.cal.event.Event`, :class:`~icalendar.cal.todo.Todo`, or
+:class:`~icalendar.cal.journal.Journal`.
 
 The default value is ``""``.
 
-Description:
-    In a group-scheduled calendar component, the property
-    is used by the "Organizer" to provide a confirmation of the event
-    to the "Attendees".  For example in a "VEVENT" calendar component,
-    the "Organizer" can indicate that a meeting is tentative,
-    confirmed, or cancelled.  In a "VTODO" calendar component, the
-    "Organizer" can indicate that an action item needs action, is
-    completed, is in process or being worked on, or has been
-    cancelled.  In a "VJOURNAL" calendar component, the "Organizer"
-    can indicate that a journal entry is draft, final, or has been
-    cancelled or removed.
+Possible values for :class:`~icalendar.cal.event.Event` include the
+following:
+
+-   :attr:`~icalendar.enums.STATUS.CONFIRMED`
+-   :attr:`~icalendar.enums.STATUS.TENTATIVE`
+-   :attr:`~icalendar.enums.STATUS.CANCELLED`
+
+Possible values for :class:`~icalendar.cal.todo.Todo` include the
+following:
+
+-   :attr:`~icalendar.enums.STATUS.NEEDS_ACTION`
+-   :attr:`~icalendar.enums.STATUS.COMPLETED`
+-   :attr:`~icalendar.enums.STATUS.IN_PROCESS`
+-   :attr:`~icalendar.enums.STATUS.CANCELLED`
+-   :attr:`~icalendar.enums.STATUS.PENDING`
+-   :attr:`~icalendar.enums.STATUS.FAILED`
+
+Possible values for :class:`~icalendar.cal.journal.Journal` include the
+following:
+
+-   :attr:`~icalendar.enums.STATUS.DRAFT`
+-   :attr:`~icalendar.enums.STATUS.FINAL`
+-   :attr:`~icalendar.enums.STATUS.CANCELLED`
+
+..  version-changed:: 0.0.0
+
+    Added two task statuses according to :rfc:`10051#section-11.2`\ :
+    :attr:`~icalendar.enums.STATUS.PENDING` for a task that has been accepted
+    but has not started, and :attr:`~icalendar.enums.STATUS.FAILED` for a task
+    that has failed.
+
+Returns:
+    :class:`icalendar.enums.STATUS`.
+
 """,
 )
 
@@ -1649,7 +1771,10 @@ Example:
 
 
 def _timezone_datetime_property(name: str, docs: str):
-    """Create a property to access the values with a proper timezone."""
+    """Create a property to access the values with a proper timezone.
+
+    :meta private:
+    """
 
     return single_utc_property(name, docs)
 
@@ -2032,6 +2157,8 @@ def set_end_with_locking(
 def _get_images(self: Component) -> list[Image]:
     """IMAGE specifies an image associated with the calendar or a calendar component.
 
+    :meta private:
+
     Description:
         This property specifies an image for an iCalendar
         object or a calendar component via a URI or directly with inline
@@ -2055,7 +2182,7 @@ def _get_images(self: Component) -> list[Image]:
     .. note::
 
         At the present moment, this property is read-only. If you require a setter,
-        please open an issue or a pull request.
+        open an issue or a pull request.
     """
     images = self.get("IMAGE", [])
     if not isinstance(images, SEQUENCE_TYPES):
@@ -2068,6 +2195,8 @@ images_property = property(_get_images)
 
 def _get_conferences(self: Component) -> list[Conference]:
     """Return the CONFERENCE properties as a list.
+
+    :meta private:
 
     Purpose:
         This property specifies information for accessing a conferencing system.
@@ -2159,14 +2288,20 @@ def _get_conferences(self: Component) -> list[Conference]:
 
 
 def _set_conferences(self: Component, conferences: list[Conference] | None):
-    """Set the conferences."""
+    """Set the conferences
+
+    :meta private:
+    """
     _del_conferences(self)
     for conference in conferences or []:
         self.add("CONFERENCE", conference.to_uri())
 
 
 def _del_conferences(self: Component):
-    """Delete all conferences."""
+    """Delete all conferences.
+
+    :meta private:
+    """
     self.pop("CONFERENCE")
 
 
@@ -2175,6 +2310,8 @@ conferences_property = property(_get_conferences, _set_conferences, _del_confere
 
 def _get_links(self: Component) -> list[vUri | vUid | vXmlReference]:
     """LINK properties as a list.
+
+    :meta private:
 
     Purpose:
         LINK provides a reference to external information related to a component.
@@ -2291,7 +2428,10 @@ LINKS_TYPE_SETTER: TypeAlias = (
 
 
 def _set_links(self: Component, links: LINKS_TYPE_SETTER) -> None:
-    """Set the LINKs."""
+    """Set the LINKs.
+
+    :meta private:
+    """
     _del_links(self)
     if links is None:
         return
@@ -2304,7 +2444,10 @@ def _set_links(self: Component, links: LINKS_TYPE_SETTER) -> None:
 
 
 def _del_links(self: Component) -> None:
-    """Delete all links."""
+    """Delete all links.
+
+    :meta private:
+    """
     self.pop("LINK")
 
 
@@ -2317,6 +2460,8 @@ RELATED_TO_TYPE_SETTER: TypeAlias = (
 
 def _get_related_to(self: Component) -> list[vText | vUri | vUid]:
     """RELATED-TO properties as a list.
+
+    :meta private:
 
     Purpose:
         This property is used to represent a relationship or reference
@@ -2444,12 +2589,18 @@ def _get_related_to(self: Component) -> list[vText | vUri | vUid]:
 
 
 def _set_related_to(self: Component, values: RELATED_TO_TYPE_SETTER) -> None:
-    """Set the RELATED-TO properties."""
+    """Set the RELATED-TO properties.
+
+    :meta private:
+    """
     PropertyListView(self, "RELATED-TO").replace_with(values)
 
 
 def _del_related_to(self: Component):
-    """Delete the RELATED-TO properties."""
+    """Delete the RELATED-TO properties.
+
+    :meta private:
+    """
     PropertyListView(self, "RELATED-TO").clear()
 
 
@@ -2458,6 +2609,8 @@ related_to_property = property(_get_related_to, _set_related_to, _del_related_to
 
 def _get_concepts(self: Component) -> list[vUri]:
     """CONCEPT
+
+    :meta private:
 
     Purpose:
         CONCEPT defines the formal categories for a calendar component.
@@ -2501,12 +2654,18 @@ CONCEPTS_TYPE_SETTER: TypeAlias = list[vUri | str] | str | vUri | None
 
 
 def _set_concepts(self: Component, concepts: CONCEPTS_TYPE_SETTER):
-    """Set the concepts."""
+    """Set the concepts.
+
+    :meta private:
+    """
     PropertyListView(self, "CONCEPT").replace_with(concepts)
 
 
 def _del_concepts(self: Component):
-    """Delete the concepts."""
+    """Delete the concepts.
+
+    :meta private:
+    """
     PropertyListView(self, "CONCEPT").clear()
 
 
@@ -2741,7 +2900,10 @@ ATTACHMENTS_TYPE_SETTER: TypeAlias = (
 
 
 def _normalize_attachment(value: str | bytes | vUri | vBinary) -> vUri | vBinary:
-    """Convert one attachment value."""
+    """Convert one attachment value.
+
+    :meta private:
+    """
     if isinstance(value, (vUri, vBinary)):
         return value
     if isinstance(value, str):
@@ -2754,7 +2916,10 @@ def _normalize_attachment(value: str | bytes | vUri | vBinary) -> vUri | vBinary
 
 
 def _get_attachments(self: Component) -> list[vUri | vBinary]:
-    """Get all the attachments"""
+    """Get all the attachments.
+
+    :meta private:
+    """
     attachments = self.get("ATTACH", [])
     if not isinstance(attachments, SEQUENCE_TYPES):
         return [attachments]
@@ -2762,7 +2927,10 @@ def _get_attachments(self: Component) -> list[vUri | vBinary]:
 
 
 def _set_attachments(self: Component, value: ATTACHMENTS_TYPE_SETTER) -> None:
-    """Set attachments properties"""
+    """Set attachments properties.
+
+    :meta private:
+    """
     if value is None:
         _del_attachments(self)
         return
@@ -2775,7 +2943,10 @@ def _set_attachments(self: Component, value: ATTACHMENTS_TYPE_SETTER) -> None:
 
 
 def _del_attachments(self: Component) -> None:
-    """Delete all attachments"""
+    """Delete all attachments.
+
+    :meta private:
+    """
     self.pop("ATTACH", None)
 
 

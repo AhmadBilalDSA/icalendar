@@ -4,7 +4,7 @@ RFC 5545, section 3.3.9, builds a period from datetimes only. A period
 written with dates used to parse without error and then raise an
 ``AttributeError`` from ``to_ical()``.
 
-See https://github.com/collective/icalendar/issues/1633
+See https://github.com/PyCalendar/icalendar/issues/1633
 """
 
 from datetime import date, datetime, timedelta, timezone
@@ -193,5 +193,5 @@ def test_an_end_date_before_the_start_is_rejected():
     the start, so the period is invalid. Reading the end as the end of that
     day would invent a duration the calendar never stated.
     """
-    with pytest.raises(ValueError, match="Start time is greater than end time"):
+    with pytest.raises(ValueError, match="Start time is not before end time"):
         vPeriod(vPeriod.from_ical("19970102T120000Z/19970102"))

@@ -251,8 +251,8 @@ class vDatetime(TimeBase):
         In contrast to :meth:`to_xcal`, this method does not add the parameters.
 
         Parameters:
-            element: The element to add the property to.
-            tag: The tag to use.
+            element: Required. The element to add the property to.
+            tag: Required. The tag to use.
         """
         element = SubElement(element, tag.lower())
         text = self.dt.strftime("%Y-%m-%dT%H:%M:%S")
@@ -262,10 +262,10 @@ class vDatetime(TimeBase):
 
     @classmethod
     def from_xcal_element(cls, element: ElementAdapter) -> datetime:
-        """Parse xCal from :rfc:`6321`.
+        """Parse an xCal date-time element according to :rfc:`6321`.
 
         Parameters:
-            element: The xCal element to parse.
+            element: Required. The xCal element to parse.
 
         Returns:
             The datetime object, possibly with a UTC timezone.
@@ -291,13 +291,46 @@ class vDatetime(TimeBase):
             dt = tzp.localize_utc(dt)
         return dt
 
+    @property
+    def ical_value(self) -> datetime:
+        """The datetime value of this property.
+
+        Returns:
+            The datetime of the property. If its ``tzinfo`` was set, then it's timezone-aware, else it's naive and set to ``None``.
+
+        Examples:
+            The following represents a datetime where ``tzinfo`` is set to ``None``:
+
+            ..  code-block:: pycon
+
+                >>> from datetime import datetime, timezone
+                >>> from icalendar import vDatetime
+                >>> naive = vDatetime(datetime(2025, 11, 10, 16, 52))
+                >>> naive.ical_value
+                datetime.datetime(2025, 11, 10, 16, 52)
+                >>> print(naive.ical_value.tzinfo)
+                None
+
+            The following represents a datetime where ``tzinfo`` is set to ``timezone.utc``:
+
+            ..  code-block:: pycon
+
+                >>> aware = vDatetime(datetime(2025, 11, 10, 16, 52, tzinfo=timezone.utc))
+                >>> aware.ical_value
+                datetime.datetime(2025, 11, 10, 16, 52, tzinfo=datetime.timezone.utc)
+                >>> print(aware.ical_value.tzinfo)
+                UTC
+        """
+        return self.dt
+
     @classmethod
     @from_xcal_wrapper
     def from_xcal(cls, parser: XCalParser, params: Parameters) -> Self:
-        """Parse xCal from :rfc:`6321`.
+        """Parse xCal according to :rfc:`6321`.
 
         Parameters:
-            xml: The XML to parse or a parser.
+            parser: Required. The xCal to parse or a parser.
+            params: Required. The parameters of the xCal element.
 
         Raises:
             ~error.XCalParsingError: If the provided xCal is invalid.

@@ -31,7 +31,7 @@ class ZONEINFO(TZProvider):
     name = "zoneinfo"
     # Use lazy initialization via properties to avoid import-time failures
     # in environments without timezone data (e.g., Pyodide/WebAssembly).
-    # See https://github.com/collective/icalendar/issues/1073
+    # See https://github.com/PyCalendar/icalendar/issues/1073
     _utc: zoneinfo.ZoneInfo | None = None
     _available_timezones_cache: set | None = None
     # Class-level lock is intentional: caches are shared by all instances.
@@ -49,7 +49,10 @@ class ZONEINFO(TZProvider):
 
     @property
     def _available_timezones(self) -> set:
-        """Return available timezones, initializing lazily on first access."""
+        """Return available timezones, initializing lazily on first access.
+
+        :meta private:
+        """
         if self._available_timezones_cache is None:
             with self._init_lock:
                 # Double-check after acquiring lock
@@ -110,7 +113,10 @@ class ZONEINFO(TZProvider):
                 raise ValueError(f"Invalid iCalendar VTIMEZONE: {e}") from e
 
     def _create_timezone(self, tz: Timezone) -> tzinfo:
-        """Create a timezone and maybe fail"""
+        """Create a timezone and maybe fail.
+
+        :meta private:
+        """
         file = StringIO(tz.to_ical().decode("UTF-8", "replace"))
         return tzical(file).get()
 

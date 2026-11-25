@@ -1,11 +1,4 @@
-"""Functions for manipulating strings and bytes.
-
-..  versionremoved:: 8.0.0
-    Removed ``escape_char``, ``escape_string``, ``foldline``, ``unescape_char``,
-    ``unescape_string``.
-
-    .. seealso:: :ref:`removed-from-icalendar-parser-string`.
-"""
+"""Functions for manipulating strings and bytes."""
 
 import re
 
@@ -15,6 +8,8 @@ from icalendar.parser_tools import DEFAULT_ENCODING, to_unicode
 
 def _escape_char(text: str | bytes) -> str:
     r"""Format value according to iCalendar TEXT escaping rules.
+
+    :meta private:
 
     Escapes special characters in text values according to :rfc:`5545#section-3.3.11`
     rules.
@@ -65,7 +60,9 @@ def _escape_char(text: str | bytes) -> str:
 def _unescape_char(text: str | bytes) -> str | bytes:
     r"""Unescape iCalendar TEXT values.
 
-    Reverses the escaping applied by :func:`_escape_char` according to
+    :meta private:
+
+    Reverses the escaping applied by ``_escape_char`` according to
     :rfc:`5545#section-3.3.11` TEXT escaping rules.
 
     Parameters:
@@ -111,6 +108,8 @@ def _unescape_char(text: str | bytes) -> str | bytes:
 
 def _foldline(line: str, limit: int = 75, fold_sep: str = "\r\n ") -> str:
     r"""Make a string folded as defined in :rfc:`5545#section-3.1`.
+
+    :meta private:
 
     Lines of text SHOULD NOT be longer than 75 octets, excluding the line
     break.  Long content lines SHOULD be split into a multiple line
@@ -159,6 +158,8 @@ def _foldline(line: str, limit: int = 75, fold_sep: str = "\r\n ") -> str:
 def _escape_string(val: str) -> str:
     r"""Escape backslash sequences to URL-encoded hex values.
 
+    :meta private:
+
     Converts backslash-escaped characters to their percent-encoded hex
     equivalents. This is used for parameter parsing to preserve escaped
     characters during processing.
@@ -180,7 +181,7 @@ def _escape_string(val: str) -> str:
 
         A literal ``%`` is escaped first so that percent sequences already in
         the value (e.g. ``%2C`` in a URI) are not confused with the markers
-        introduced here. :func:`_unescape_string` reverses it.
+        introduced here. ``_unescape_string`` reverses it.
     """
     # f'{i:02X}'
     return (
@@ -195,7 +196,9 @@ def _escape_string(val: str) -> str:
 def _unescape_string(val: str) -> str:
     r"""Unescape URL-encoded hex values to their original characters.
 
-    Reverses :func:`_escape_string` by converting percent-encoded hex values
+    :meta private:
+
+    Reverses ``_escape_string`` by converting percent-encoded hex values
     back to their original characters. This is used for parameter parsing.
 
     Parameters:
@@ -213,7 +216,7 @@ def _unescape_string(val: str) -> str:
         - ``%5C`` -> ``\``
         - ``%25`` -> ``%``
 
-        ``%25`` is restored last so a literal ``%`` that :func:`_escape_string`
+        ``%25`` is restored last so a literal ``%`` that ``_escape_string``
         protected does not re-trigger the marker replacements above.
     """
     return (

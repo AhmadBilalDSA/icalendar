@@ -41,7 +41,7 @@ if TYPE_CHECKING:
     from icalendar.parser.ical.component import ComponentIcalParser
 
 
-DEFAULT_PRODID = f"-//collective//icalendar//{__version__}//EN"
+DEFAULT_PRODID = f"-//PyCalendar//icalendar//{__version__}//EN"
 """The value for :attr:`~icalendar.cal.calendar.Calendar.prodid` when it's not provided."""
 
 
@@ -114,7 +114,7 @@ class Calendar(Component):
                 >>> print(Calendar.example().to_ical().decode())
                 BEGIN:VCALENDAR
                 VERSION:2.0
-                PRODID:collective/icalendar
+                PRODID:PyCalendar/icalendar
                 CALSCALE:GREGORIAN
                 METHOD:PUBLISH
                 X-WR-CALNAME:Holidays
@@ -157,7 +157,10 @@ class Calendar(Component):
 
     @classmethod
     def _get_ical_parser(cls, st: str | bytes) -> ComponentIcalParser:
-        """Get the iCal parser for the given input string."""
+        """Get the iCal parser for the given input string.
+
+        :meta private:
+        """
         return CalendarIcalParser(st, cls._get_component_factory(), cls.types_factory)
 
     @overload

@@ -1,7 +1,7 @@
 """Regression test for RecursionError on deeply-nested jCal.
 
 The iCal parser/serializer was made iterative to survive deep nesting
-(see https://github.com/collective/icalendar/issues/1370), but the jCal
+(see https://github.com/PyCalendar/icalendar/issues/1370), but the jCal
 counterparts :meth:`Component.from_jcal` and :meth:`Component.to_jcal`
 remained recursive: a small jCal payload nesting components a few hundred
 levels deep raised an uncaught ``RecursionError`` at the default recursion
@@ -36,7 +36,7 @@ def _nested_jcal(depth: int) -> list:
 
 
 def _nesting_depth(component: Component) -> int:
-    """Count how many levels of single-child nesting ``component`` has."""
+    """Count the levels of single-child nesting ``component`` has."""
     depth = 0
     while component.subcomponents:
         depth += 1

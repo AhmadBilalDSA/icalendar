@@ -139,7 +139,10 @@ class vDDDTypes(TimeBase):
         return [cls(date(2025, 11, 10)), cls(timedelta(days=1, hours=5))]
 
     def _get_value(self) -> str | None:
-        """Determine the VALUE parameter."""
+        """Determine the VALUE parameter.
+
+        :meta private:
+        """
         return self.to_property_type().VALUE
 
     from icalendar.param import VALUE
@@ -149,7 +152,7 @@ class vDDDTypes(TimeBase):
         return self.to_property_type().to_jcal(name)
 
     @classmethod
-    def parse_jcal_value(cls, jcal: str | list) -> timedelta:
+    def parse_jcal_value(cls, jcal: str | list) -> DT_TYPE:
         """Parse a jCal value.
 
         Raises:
@@ -161,11 +164,14 @@ class vDDDTypes(TimeBase):
         JCalParsingError.validate_value_type(jcal, str, cls)
         if "/" in jcal:
             return vPeriod.parse_jcal_value(jcal)
-        for jcal_type in (vDatetime, vDate, vTime, vDuration):
-            try:
-                return jcal_type.parse_jcal_value(jcal)
-            except JCalParsingError:
-                pass
+        if jcal.startswith(("P", "-P", "+P")):
+            return vDuration.parse_jcal_value(jcal)
+        if "T" in jcal:
+            return vDatetime.parse_jcal_value(jcal)
+        if ":" in jcal:
+            return vTime.parse_jcal_value(jcal)
+        if "-" in jcal:
+            return vDate.parse_jcal_value(jcal)
         raise JCalParsingError(
             "Cannot parse date, time, date-time, duration, or period.", cls, value=jcal
         )
@@ -217,10 +223,11 @@ class vDDDTypes(TimeBase):
     @classmethod
     @from_xcal_wrapper
     def from_xcal(cls, parser: XCalParser, params: Parameters) -> Self:
-        """Parse xCal from :rfc:`6321`.
+        """Parse xCal according to :rfc:`6321`.
 
         Parameters:
-            xml: The XML to parse or a parser.
+            parser: Required. The xCal to parse or a parser.
+            params: Required. The parameters of the xCal element.
 
         Raises:
             ~error.XCalParsingError: If the provided xCal is invalid.
@@ -237,10 +244,11 @@ class vDDDTypes(TimeBase):
     @classmethod
     @from_xcal_wrapper
     def from_xcal_in_recur(cls, parser: XCalParser, params: Parameters) -> Self:
-        """Parse xCal from :rfc:`6321`.
+        """Parse xCal according to :rfc:`6321`.
 
         Parameters:
-            xml: The XML to parse or a parser.
+            parser: Required. The xCal to parse or a parser.
+            params: Required. The parameters of the xCal element.
 
         Raises:
             ~error.XCalParsingError: If the provided xCal is invalid.

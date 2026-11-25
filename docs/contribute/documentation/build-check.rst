@@ -24,9 +24,9 @@ This chapter describes how to build and check the quality of documentation.
 File locations
 --------------
 
-Narrative documentation files are located in the `docs <https://github.com/collective/icalendar/tree/main/docs>`_ directory.
+Narrative documentation files are located in the `docs <https://github.com/PyCalendar/icalendar/tree/main/docs>`_ directory.
 
-:doc:`API reference documentation files </reference/api/icalendar>` are located in the `src <https://github.com/collective/icalendar/tree/main/docs>`_ directory.
+:doc:`API reference documentation files </reference/api/icalendar>` are located in the `src <https://github.com/PyCalendar/icalendar/tree/main/docs>`_ directory.
 
 
 .. _documentation-make-commands:
@@ -275,13 +275,20 @@ Document a package
 After adding and configuring a package, it's important to inform other people what the feature does and how to use it.
 
 
+..  _pull-request-previews:
+
 Pull request previews
 ---------------------
 
 On every pull request, Read the Docs generates a pull request preview of the documentation.
-It creates a new comment containing a link to the preview in the pull request.
 
-`View all builds of documentation on Read the Docs <https://app.readthedocs.org/projects/icalendar/builds/>`_.
+Use this feature to:
+
+-   :ref:`Check the change log entry <check-change-log>` when creating a pull request.
+-   Ensure documentation and docstrings render correctly, including cross-references to Python objects and documentation sections and chapters.
+-   With the `visual diff <https://docs.readthedocs.com/platform/stable/visual-diff.html>`_ feature enabled, navigate between only those files and sections you've changed, and compare the differences of those changes.
+
+..  include:: ../../_include/rtd-preview-navigate.inc
 
 This feature is configured in the file :file:`.readthedocs.yml` and the repository settings.
 

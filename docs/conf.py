@@ -10,6 +10,10 @@ HERE = Path(__file__).parent
 SRC = HERE.parent / "src"
 sys.path.insert(0, str(SRC))  # update docs from icalendar source for livehtml
 
+project = "icalendar"
+this_year = datetime.date.today().year  # noqa: DTZ011
+copyright = f"{this_year}, Plone Foundation"  # noqa: A001
+
 extensions = [
     "notfound.extension",
     "sphinx.ext.apidoc",
@@ -28,17 +32,7 @@ extensions = [
 source_suffix = {".rst": "restructuredtext"}
 master_doc = "index"
 
-project = "icalendar"
-this_year = datetime.date.today().year  # noqa: DTZ011
-copyright = f"{this_year}, Plone Foundation"  # noqa: A001
-
 # -- Options for HTML output -------------------------------------------------
-
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
 
 # Define the json_url for our version switcher.
 json_url = "https://icalendar.readthedocs.io/en/latest/_static/version-switcher.json"
@@ -64,30 +58,34 @@ elif version_match == "stable":
 exclude_patterns = [
     "reference/api/modules.rst",
 ]
+html_context = {
+    "github_user": "PyCalendar",
+    "github_repo": "icalendar",
+    "github_version": "main",
+    "doc_path": "docs",
+}
+# Custom fa-custom/fa-pypi icon used in icon_links above.
+html_js_files = [
+    ("js/custom-icons.js", {"defer": "defer"}),
+]
+html_static_path = ["_static"]
 html_theme = "pydata_sphinx_theme"
 html_theme_options = {
+    "announcement": "Until further notice, maintainers alone are unable to respond to the high volume of new pull requests.<br>See <a href='https://icalendar.readthedocs.io/en/latest/contribute/index.html#peer-reviews'>Peer reviews</a> instead of opening a new pull request.",  # noqa: E501
     "icon_links": [
         {
             "name": "GitHub",
-            "url": "https://github.com/collective/icalendar",
+            "url": "https://github.com/PyCalendar/icalendar",
             "icon": "fa-brands fa-square-github",
             "type": "fontawesome",
-            "attributes": {
-                "target": "_blank",
-                "rel": "noopener me",
-                "class": "nav-link custom-fancy-css",
-            },
+            "attributes": {"target": "_blank", "rel": "noopener me"},
         },
         {
             "name": "PyPI",
             "url": "https://pypi.org/project/icalendar",
             "icon": "fa-custom fa-pypi",
             "type": "fontawesome",
-            "attributes": {
-                "target": "_blank",
-                "rel": "noopener me",
-                "class": "nav-link custom-fancy-css",
-            },
+            "attributes": {"target": "_blank", "rel": "noopener me"},
         },
     ],
     "footer_start": ["nlnet", "donate"],
@@ -107,21 +105,11 @@ html_theme_options = {
     },
     "use_edit_page_button": True,
 }
-html_context = {
-    #     "github_url": "https://github.com", # or your GitHub Enterprise site
-    "github_user": "collective",
-    "github_repo": "icalendar",
-    "github_version": "main",
-    "doc_path": "docs",
-}
-html_static_path = [
-    "_static",
-]
-html_js_files = [
-    ("js/custom-icons.js", {"defer": "defer"}),
-]
 pygments_style = "sphinx"
 smartquotes_action = "De"
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ["_templates"]
+
 
 # -- linkcheck builder configuration ----------------------------------
 # Ignore localhost
@@ -129,17 +117,17 @@ linkcheck_ignore = [
     # Ignore pages that require authentication
     r"https://app.readthedocs.org/dashboard/icalendar/users/create/",
     r"https://docutils.sourceforge.io/rst.html",
-    r"https://github.com/collective/icalendar/fork",
-    r"https://github.com/collective/icalendar/issues/new",
-    r"https://github.com/collective/icalendar/settings/",
+    r"https://github.com/PyCalendar/icalendar/fork",
+    r"https://github.com/PyCalendar/icalendar/issues/new",
+    r"https://github.com/PyCalendar/icalendar/settings/",
     r"https://groups.google.com/g/icalendar-coc/",
     r"https://pypi.org/manage/project/icalendar/collaboration/",
+    r"https://pypi.org/manage/project/icalendar/settings/publishing/",
     # Ignore specific anchors
     r"https://github.com/actions/python-versions#support-policy",
-    r"https://github.com/collective/icalendar/blob/7ca9db18c0847d1530520e01baf75f8ab8f4fa06/pyproject.toml#L32",
-    r"https://github.com/collective/icalendar/blob/main/CODE_OF_CONDUCT.md#enforcement",
-    r"https://github.com/collective/icalendar/blob/main/README.rst#related-projects",
-    r"https://github.com/pre-commit/pre-commit-hooks#debug-statements",
+    r"https://github.com/PyCalendar/icalendar/blob/7ca9db18c0847d1530520e01baf75f8ab8f4fa06/pyproject.toml#L32",
+    r"https://github.com/PyCalendar/icalendar/blob/main/CODE_OF_CONDUCT.md#enforcement",
+    r"https://github.com/PyCalendar/icalendar/blob/main/README.rst#related-projects",
     r"https://up-for-grabs.net/#/filters",
     # Ignore links that are unstable
     r"https://www.unicode.org/cldr/cldr-aux/charts/29/supplemental/zone_tzid.html",
@@ -163,9 +151,15 @@ nitpick_ignore_regex = [
 # -- notfound.extension configuration ----------------------------------
 # https://sphinx-notfound-page.readthedocs.io/en/latest/configuration.html
 notfound_template = "404.html"
+# Defaults to READTHEDOCS_CANONICAL_URL's path on RTD. Outside RTD, that env
+# var isn't set and the extension falls back to a hardcoded "/en/latest/",
+# which 404s every asset on a local build. Use root-relative paths instead
+# when not building on RTD.
+if not os.environ.get("READTHEDOCS"):
+    notfound_urls_prefix = "/"
 
 
-# -- sphinx.ext.apidoc options -------------------------------------------------
+# -- sphinx.ext.apidoc configuration -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/apidoc.html#
 apidoc_modules = [
     {
@@ -184,10 +178,11 @@ apidoc_modules = [
         },
     }
 ]
-autoclass_content = "both"
 
-# -- sphinx.ext.autodoc options -------------------------------------------------
+
+# -- sphinx.ext.autodoc configuration ------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
+autoclass_content = "both"
 autodoc_default_options = {
     "ignore-module-all": True,
     "no-inherited-members": "object,CaselessDict,str,bool,NamedTuple,int,float,Enum",
@@ -228,7 +223,13 @@ copybutton_exclude = ".linenos, .gp, .go"
 
 
 # -- sphinx_issues configuration ----------------------------------
-issues_github_path = "collective/icalendar"
+issues_github_path = "PyCalendar/icalendar"
+
+# -- sphinx_llms_txt builder configuration ----------------------------------
+llms_txt_exclude = [
+    "search",  # Exclude the search page
+    "genindex",  # Exclude the index page
+]
 
 
 # -- sphinx_reredirects configuration ----------------------------------
@@ -241,12 +242,32 @@ redirects = {
     "credits": "contribute/credits.html",
     "contributing": "contribute/index.html",
     "install": "how-to/install.html",
-    "license": "https://github.com/collective/icalendar/blob/main/LICENSE.rst",
+    "license": "https://github.com/PyCalendar/icalendar/blob/main/LICENSE.rst",
     "maintenance": "contribute/maintenance.html",
-    "security": "https://github.com/collective/icalendar/blob/main/SECURITY.md",
+    "security": "https://github.com/PyCalendar/icalendar/blob/main/SECURITY.md",
     "usage": "how-to/usage.html",
 }
 
+# -- sphinxext.opengraph configuration -----------------------------------------
+html_baseurl = os.environ.get(
+    "READTHEDOCS_CANONICAL_URL", "https://icalendar.readthedocs.io/en/stable/"
+)
+
+ogp_site_url = html_baseurl
+ogp_site_name = "icalendar"
+ogp_description_length = 200
+ogp_type = "website"
+ogp_social_cards = {
+    "image": "_static/img/pycal-icon.png",
+    "image_mini": "_static/img/pycal-icon.png",
+    "line_color": "#0f766e",
+    "background_color": "#f8f7f4",
+}
+
+
+# -- man pages output ----------------------------------------------------------
 man_pages = [("index", "icalendar", "icalendar Documentation", ["Plone Foundation"], 1)]
 
+
+# -- HTML help output ----------------------------------------------------------
 htmlhelp_basename = "icalendardoc"
