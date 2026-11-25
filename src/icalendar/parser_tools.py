@@ -58,7 +58,8 @@ def data_encode(
 
     Parameters:
         data: Required. The data structure to encode.
-        encoding: The encoding to use in the conversion.
+        encoding: The encoding to use in the conversion. Default is
+            ``DEFAULT_ENCODING``, set in :mod:`parser_tools`.
 
     Returns:
         The encoded data structure.

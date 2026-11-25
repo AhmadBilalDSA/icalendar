@@ -310,6 +310,7 @@ class Component(CaselessDict):
             encode: ``True`` if the value should be encoded to one of
                 icalendar's own property types with a fallback to
                 :attr:`~icalendar.prop.text.vText`, else ``False``.
+                Default is ``True``.
             parameters: Property parameter dictionary for the value. Only
                 available if ``encode`` is set to ``True``.
 
@@ -375,7 +376,7 @@ class Component(CaselessDict):
             encode:
                 ``True`` if the value should be encoded to one of icalendar's
                 own property types (fallback is ``vText``); ``False`` to
-                store the value as-is.
+                store the value as-is. Default is ``True``.
 
         Returns:
             ``None``
@@ -477,19 +478,19 @@ class Component(CaselessDict):
             return [self._decode(name, val) for val in vals]
         return vals
 
-    def set_inline(self, name: str, values: Sequence[str], encode=1):
+    def set_inline(self, name: str, values: Sequence[str], encode: bool = True):
         """Convert a list of values into a comma-separated string and set the
         property value to it.
 
         Parameters:
             name: Required. Name of the property.
             values: Required. Values of the properties. The properties are
-                encoded, if ``encode`` is truthy. Then tey are joined to
-                form the fila property value.
-            encode: Has a truthy value if each value in values should be
-                encoded to one of icalendar's own property types with a
-                fallback to :attr:`~icalendar.prop.text.vText`,
-                else ``False``.
+                encoded, if ``encode`` is truthy. Then they are joined to
+                form the property value.
+            encode: ``True`` if each value in values should be encoded to one
+                of icalendar's own property types with a fallback to
+                :attr:`~icalendar.prop.text.vText`, else ``False``.
+                Default is ``True``.
         """
         if encode:
             values = [self._encode(name, value, encode=True) for value in values]
@@ -523,7 +524,7 @@ class Component(CaselessDict):
     def walk(
         self,
         name: str | None = None,
-        select: Callable[[Component], bool] = __identity,
+        select: Callable[[Component], bool] | None = None,
     ) -> list[Component]:
         """Recursively traverse component and subcomponents and return a sequence of them.
 
@@ -532,14 +533,15 @@ class Component(CaselessDict):
         Parameters:
             name: The name of the component, such as ``VEVENT``, or ``None``.
             select: A function that takes the component as its first argument
-                and returns either ``True`` or ``False``.
+                and returns either ``True`` or ``False``. Default is ``None``,
+                which selects all components.
 
         Returns:
             A list of components that match.
         """
         if name is not None:
             name = name.upper()
-        return self._walk(name, select)
+        return self._walk(name, select or self.__identity)
 
     def with_uid(self, uid: str) -> list[Component]:
         """Return a list of components with the given UID.
@@ -692,7 +694,7 @@ class Component(CaselessDict):
 
         Parameters:
             sorted: Whether parameters and properties should be
-                lexicographically sorted.
+                lexicographically sorted. Default is ``True``.
 
         Returns:
             The iCalendar representation of the component.
