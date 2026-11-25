@@ -318,14 +318,14 @@ class Component(CaselessDict):
         :meta private:
 
         Parameters:
-            name (str): Required. Name of the property.
-            value (obj): Required. Value of the property. Either a native Python type or
-                any of icalendar's own property types.
-            encode (bool): ``True`` if the value should be encoded to one of
+            name: Required. Name of the property.
+            value: Required. Value of the property. Either a native Python
+                type or any of icalendar's own property types.
+            encode: ``True`` if the value should be encoded to one of
                 icalendar's own property types (falls back to ``vText``),
                 or ``False`` if not. Default is ``True``.
-            parameters (dict or None): Property parameter dictionary for the value.
-                Only used if ``encode`` is set to ``True``.
+            parameters: Property parameter dictionary for the value. Only
+                used if ``encode`` is set to ``True``.
 
         Returns:
             The encoded icalendar property value.
@@ -379,17 +379,14 @@ class Component(CaselessDict):
         RFC requires.
 
         Parameters:
-            name: Name of the property.
-            value:
-                Value of the property. Either a basic Python type or any of
-                icalendar's own property types.
-            parameters:
-                Property parameter dictionary for the value. Only consulted
-                when ``encode`` is ``True``.
-            encode:
-                ``True`` if the value should be encoded to one of icalendar's
-                own property types (fallback is ``vText``); ``False`` to
-                store the value as-is. Default is ``True``.
+            name: Required. Name of the property.
+            value: Required. Value of the property. Either a basic Python type
+                or any of icalendar's own property types.
+            encode: ``True`` if the value should be encoded to one of
+                icalendar's own property types (fallback is ``vText``);
+                ``False`` to store the value as-is. Default is ``True``.
+            parameters: Property parameter dictionary for the value. Only
+                consulted when ``encode`` is ``True``.
 
         Returns:
             ``None``
@@ -467,8 +464,9 @@ class Component(CaselessDict):
         This function returns values compatible with native Python types.
 
         Parameters:
-            default: Required. The value to return if the property is not present.
             name: Required. The name of the property.
+            default: The value to return if the property is not present. If
+                omitted, a ``KeyError`` is raised.
 
         Returns:
             The decoded value of the property, or ``default`` if the
@@ -554,8 +552,9 @@ class Component(CaselessDict):
         Parameters:
             name: Component name to keep, such as ``"VEVENT"``; ``None`` keeps
                 every name.
-            select: Function that takes a component and returns ``True`` to
-                keep it. Default is ``None``, which keeps every component.
+            select: Function that takes a component as its first argument and
+                returns ``True`` to keep it, or ``False`` otherwise. Default is
+                ``None``, which keeps every component.
 
         Returns:
             list[Component]: The matching components, starting with this one
